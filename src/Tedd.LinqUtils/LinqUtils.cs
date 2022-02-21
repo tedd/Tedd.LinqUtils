@@ -4,6 +4,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 
 namespace Tedd
 {
@@ -126,5 +128,45 @@ namespace Tedd
         public static ConcurrentQueue<T> ToConcurrentQueue<T>(this IEnumerable<T>? source) => new ConcurrentQueue<T>(source);
         public static ConcurrentStack<T> ToConcurrentStack<T>(this IEnumerable<T>? source) => new ConcurrentStack<T>(source);
         public static ConcurrentBag<T> ToConcurrentBag<T>(this IEnumerable<T>? source) => new ConcurrentBag<T>(source);
+
+        /// <summary>
+        /// Shufle items randomly.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="useCryptoGradeRandom">Uses crypto grade random by utilizing the operating systems underlying CSP (Cryptographic Service Provider) for better random data.</param>
+        /// <returns></returns>
+        public unsafe static IEnumerable<T> Shuffle<T>(this IEnumerable<T>? source, bool useCryptoGradeRandom = false)
+        {
+            Random? rnd = null;
+            RandomNumberGenerator? rng = null;
+            Span<byte> bytes = stackalloc byte[4];
+            if (useCryptoGradeRandom)
+                rng = RandomNumberGenerator.Create();
+            else
+                rnd = new Random();
+
+            var items = source!.ToArray();
+            for (var i = 0; i < items.Length; i++)
+            {
+                var j = 0;
+                if (useCryptoGradeRandom)
+                {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                    rng.GetBytes(bytes);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                    j = (int)((double)MemoryMarshal.Cast<byte, UInt32>(bytes)[0] / (double)UInt32.MaxValue * (double)items.Length);
+                }
+                else
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                    j = rnd.Next(0, items.Length);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                items[j] = items[i];
+            }
+
+            rng?.Dispose();
+
+            return items;
+        }
     }
 }
