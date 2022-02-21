@@ -154,8 +154,13 @@ namespace Tedd
                 {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                     rng.GetBytes(bytes);
+                    UInt32 ri = 0;
+                    do
+                    {
+                        ri = MemoryMarshal.Cast<byte, UInt32>(bytes)[0];
+                    } while (ri == UInt32.MaxValue);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
-                    j = (int)((double)MemoryMarshal.Cast<byte, UInt32>(bytes)[0] / (double)UInt32.MaxValue * (double)items.Length);
+                    j = (int)((double)ri / (double)UInt32.MaxValue * (double)items.Length);
                 }
                 else
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
