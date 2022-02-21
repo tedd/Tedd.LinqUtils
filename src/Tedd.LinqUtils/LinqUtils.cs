@@ -1,0 +1,130 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
+
+namespace Tedd
+{
+    public static class LinqUtils
+    {
+        /// <summary>
+        /// Perform an action for each item in collection. Same as ForEach.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="action">Action to execute for each item in collection.</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Action<T>(this IEnumerable<T>? source, Action<T> action) => ForEach(source, action);
+        /// <summary>
+        /// Executed action for each item in collection.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="action">Action to execute for each item in collection.</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> ForEach<T>(this IEnumerable<T>? source, Action<T> action)
+        {
+            foreach (var element in source!)
+                action(element);
+            return source;
+        }
+
+        /// <summary>
+        /// Joins strings with separator. Same as wrapping collection in String.Join().
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="separator">Separator to put between elements.</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string JoinStrings<T>(this IEnumerable<T>? source, string separator) => string.Join(separator, source!);
+        /// <summary>
+        /// Joins strings with separator. Same as wrapping collection in String.Join().
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="separator">Separator to put between elements.</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string JoinStrings<T>(this IEnumerable<T>? source, char separator) => string.Join(separator, source!);
+
+        public static IEnumerable<T> Minus<T>(this IEnumerable<T>? source, IEnumerable<T> other)
+        {
+            var set = new HashSet<T>(source!);
+            foreach (var element in other)
+                if (set.Contains(element))
+                    set.Remove(element);
+                else
+                    set.Add(element);
+            return set;
+        }
+
+        /// <summary>
+        /// Removes duplicated objects from collection.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="equalityComparer"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Unique<T>(this IEnumerable<T>? source, IEqualityComparer<T> equalityComparer = null) => new HashSet<T>(source!, equalityComparer);
+
+
+        public static IEnumerable<T> Plus<T>(this IEnumerable<T>? source, IEnumerable<T> other)
+        {
+            var set = new List<T>(source!);
+            set.AddRange(other);
+            return set;
+        }
+
+        public static IEnumerable<T> PlusUnique<T>(this IEnumerable<T>? source, IEnumerable<T> other, IEqualityComparer<T> equalityComparer = null)
+        {
+            var set = new HashSet<T>(source!, equalityComparer);
+            foreach (var element in other)
+                if (!set.Contains(element))
+                    set.Add(element);
+                else
+                    set.Remove(element);
+            return set;
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> NotNull<T>(this IEnumerable<T>? source) => source!;
+        /// <summary>
+        /// Same as: .Where(w => w != null)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T>? source) => source!.Where(w => w != null);
+        /// <summary>
+        /// Same as: .Where(w => !string.IsNullOrEmpty(w)
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<string> WhereIsNotNullOrEmpty(this IEnumerable<string>? source) => source!.Where(w => !string.IsNullOrEmpty(w));
+        /// <summary>
+        /// Same as: .Where(w => !string.IsNullOrWhiteSpace(w)
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<string> WhereIsNotNullOrWhiteSpace(this IEnumerable<string>? source) => source!.Where(w => !string.IsNullOrWhiteSpace(w));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T>? If<T>(this IEnumerable<T>? source, bool enabled, Func<IEnumerable<T>, IEnumerable<T>> linqAction)
+            => enabled ? linqAction(source!) : source;
+
+        public static Queue<T> ToQueue<T>(this IEnumerable<T>? source) => new Queue<T>(source);
+        public static Stack<T> ToStack<T>(this IEnumerable<T>? source) => new Stack<T>(source);
+        public static HashSet<T> ToHashSet<T>(this IEnumerable<T>? source) => new HashSet<T>(source);
+        public static ConcurrentQueue<T> ToConcurrentQueue<T>(this IEnumerable<T>? source) => new ConcurrentQueue<T>(source);
+        public static ConcurrentStack<T> ToConcurrentStack<T>(this IEnumerable<T>? source) => new ConcurrentStack<T>(source);
+        public static ConcurrentBag<T> ToConcurrentBag<T>(this IEnumerable<T>? source) => new ConcurrentBag<T>(source);
+    }
+}
