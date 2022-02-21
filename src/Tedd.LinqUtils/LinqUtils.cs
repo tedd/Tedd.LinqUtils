@@ -153,10 +153,10 @@ namespace Tedd
                 if (useCryptoGradeRandom)
                 {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-                    rng.GetBytes(bytes);
                     UInt32 ri = 0;
                     do
                     {
+                        rng.GetBytes(bytes);
                         ri = MemoryMarshal.Cast<byte, UInt32>(bytes)[0];
                     } while (ri == UInt32.MaxValue);
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
