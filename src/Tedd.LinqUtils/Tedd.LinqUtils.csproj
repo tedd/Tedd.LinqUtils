@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<PackageProjectUrl>https://github.com/tedd/Tedd.LinqUtils</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/tedd/Tedd.LinqUtils.git</RepositoryUrl>
 		<PackageTags>Linq;ForEach;JoinStrings;StringJoin;Plus;Minus;Unique</PackageTags>
