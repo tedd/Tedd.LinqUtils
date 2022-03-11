@@ -30,7 +30,7 @@ namespace Tedd
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T>? source, Action<T> action)
         {
-            foreach (var element in source!)
+            foreach (var element in source)
                 action(element);
             return source;
         }
@@ -43,7 +43,7 @@ namespace Tedd
         /// <param name="separator">Separator to put between elements.</param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string JoinStrings<T>(this IEnumerable<T>? source, string separator) => string.Join(separator, source!);
+        public static string JoinStrings<T>(this IEnumerable<T>? source, string separator) => string.Join(separator, source);
         /// <summary>
         /// Joins strings with separator. Same as wrapping collection in String.Join().
         /// </summary>
@@ -52,7 +52,7 @@ namespace Tedd
         /// <param name="separator">Separator to put between elements.</param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string JoinStrings<T>(this IEnumerable<T>? source, char separator) => string.Join(separator, source!);
+        public static string JoinStrings<T>(this IEnumerable<T>? source, char separator) => string.Join(separator, source);
 
         public static IEnumerable<T> Minus<T>(this IEnumerable<T>? source, IEnumerable<T> other)
         {
@@ -73,7 +73,7 @@ namespace Tedd
         /// <param name="equalityComparer"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T> Unique<T>(this IEnumerable<T>? source, IEqualityComparer<T> equalityComparer = null) => new HashSet<T>(source!, equalityComparer);
+        public static IEnumerable<T> Unique<T>(this IEnumerable<T>? source, IEqualityComparer<T> equalityComparer = null) => new HashSet<T>(source, equalityComparer);
 
 
         public static IEnumerable<T> Plus<T>(this IEnumerable<T>? source, IEnumerable<T> other)
@@ -85,7 +85,7 @@ namespace Tedd
 
         public static IEnumerable<T> PlusUnique<T>(this IEnumerable<T>? source, IEnumerable<T> other, IEqualityComparer<T> equalityComparer = null)
         {
-            var set = new HashSet<T>(source!, equalityComparer);
+            var set = new HashSet<T>(source, equalityComparer);
             foreach (var element in other)
                 if (!set.Contains(element))
                     set.Add(element);
@@ -93,8 +93,6 @@ namespace Tedd
                     set.Remove(element);
             return set;
         }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T> NotNull<T>(this IEnumerable<T>? source) => source!;
         /// <summary>
         /// Same as: .Where(w => w != null)
         /// </summary>
@@ -102,21 +100,21 @@ namespace Tedd
         /// <param name="source"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T>? source) => source!.Where(w => w != null);
+        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T>? source) => source.Where(w => w != null);
         /// <summary>
         /// Same as: .Where(w => !string.IsNullOrEmpty(w)
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<string> WhereIsNotNullOrEmpty(this IEnumerable<string>? source) => source!.Where(w => !string.IsNullOrEmpty(w));
+        public static IEnumerable<string> WhereIsNotNullOrEmpty(this IEnumerable<string>? source) => source.Where(w => !string.IsNullOrEmpty(w));
         /// <summary>
         /// Same as: .Where(w => !string.IsNullOrWhiteSpace(w)
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<string> WhereIsNotNullOrWhiteSpace(this IEnumerable<string>? source) => source!.Where(w => !string.IsNullOrWhiteSpace(w));
+        public static IEnumerable<string> WhereIsNotNullOrWhiteSpace(this IEnumerable<string>? source) => source.Where(w => !string.IsNullOrWhiteSpace(w));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T>? If<T>(this IEnumerable<T>? source, bool enabled, Func<IEnumerable<T>, IEnumerable<T>> linqAction)

@@ -1,10 +1,40 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
+		<PackageProjectUrl>https://github.com/tedd/Tedd.LinqUtils</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/tedd/Tedd.LinqUtils.git</RepositoryUrl>
+		<PackageTags>Linq;ForEach;JoinStrings;StringJoin;Plus;Minus;Unique</PackageTags>
+		<Description>Linq extensions such as .Foreach, .Unique, .NotNull,  .JoinStrings</Description>
+		<Version>0.0.1-preview1</Version>
+
+		<Authors>tedd</Authors>
+		<Company>Tedd Hansen</Company>
+		<RepositoryType>git</RepositoryType>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<Copyright>Tedd Hansen</Copyright>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<EnableNETAnalyzers>True</EnableNETAnalyzers>
+		<AnalysisLevel>latest-all</AnalysisLevel>
 		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Include="..\..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>  
+		<None Include="..\..\LICENSE">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	</ItemGroup>
 
 </Project>
