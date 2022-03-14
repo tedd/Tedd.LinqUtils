@@ -14,7 +14,7 @@ public static class LinqFilterMethods
     /// <param name="source"></param>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> source!!) => source.Where(w => w != null);
+    public static IEnumerable<T> WhereIsNotNull<T>(this IEnumerable<T> source!!) => source.Where(w => w != null);
     /// <summary>
     /// Same as: .Where(w => !string.IsNullOrEmpty(w)
     /// </summary>

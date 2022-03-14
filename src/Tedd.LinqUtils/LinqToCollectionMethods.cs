@@ -20,7 +20,13 @@ public static class LinqToCollectionMethods
     /// </summary>
     /// <param name="comparer"></param>
     /// <returns>HashSet&lt;T&gt; object containint all elements.</returns>
-    public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source!!, IEqualityComparer<T>? comparer = null) => new HashSet<T>(source, comparer);
+    public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source!!) => new HashSet<T>(source);
+    /// <summary>
+    /// Convert to HashSet&lt;T&gt;.
+    /// </summary>
+    /// <param name="comparer"></param>
+    /// <returns>HashSet&lt;T&gt; object containint all elements.</returns>
+    public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source!!, IEqualityComparer<T> comparer) => new HashSet<T>(source, comparer);
     /// <summary>
     /// Convert to ConcurrentQueue&lt;T&gt;.
     /// </summary>

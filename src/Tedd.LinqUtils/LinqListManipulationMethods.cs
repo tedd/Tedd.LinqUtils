@@ -15,20 +15,36 @@ public static class LinqListManipulationMethods
         foreach (var element in other)
             if (set.Contains(element))
                 set.Remove(element);
-            else
-                set.Add(element);
+
         return set;
     }
+    public static IEnumerable<T> Minus<T>(this IEnumerable<T> source!!, IEnumerable<T> other!!, IEqualityComparer<T>? comparer)
+    {
+        var set = new HashSet<T>(source!, comparer);
+        foreach (var element in other)
+            if (set.Contains(element))
+                set.Remove(element);
 
-    /// <summary>
-    /// Removes duplicated objects from collection.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="source"></param>
-    /// <param name="equalityComparer"></param>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<T> Unique<T>(this IEnumerable<T> source!!, IEqualityComparer<T>? equalityComparer = null) => new HashSet<T>(source, equalityComparer);
+        return set;
+    }
+    ///// <summary>
+    ///// Removes duplicated objects from collection.
+    ///// </summary>
+    ///// <typeparam name="T"></typeparam>
+    ///// <param name="source"></param>
+    ///// <returns></returns>
+    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    //public static IEnumerable<T> Unique<T>(this IEnumerable<T> source!!) => new HashSet<T>(source);
+
+    ///// <summary>
+    ///// Removes duplicated objects from collection.
+    ///// </summary>
+    ///// <typeparam name="T"></typeparam>
+    ///// <param name="source"></param>
+    ///// <param name="comparer"></param>
+    ///// <returns></returns>
+    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    //public static IEnumerable<T> Unique<T>(this IEnumerable<T> source!!, IEqualityComparer<T>? comparer) => new HashSet<T>(source, comparer);
 
     public static IEnumerable<T> Append<T>(this IEnumerable<T> source!!, T other!!)
     {
@@ -36,9 +52,19 @@ public static class LinqListManipulationMethods
             yield return item;
         yield return other;
     }
-    public static IEnumerable<T> Prepend<T>(this IEnumerable<T> source!!, T other!!)
+
+    public static IEnumerable<T> Append<T>(this IEnumerable<T> source!!, IEnumerable<T> other!!)
     {
-        yield return other;
+        foreach (var item in source)
+            yield return item;
+        foreach (var item in other)
+            yield return item;
+    }
+
+    public static IEnumerable<T> Prepend<T>(this IEnumerable<T> source!!, IEnumerable<T> other!!)
+    {
+        foreach (var item in other)
+            yield return item;
         foreach (var item in source)
             yield return item;
     }
@@ -51,9 +77,19 @@ public static class LinqListManipulationMethods
             yield return item;
     }
 
-    public static IEnumerable<T> PlusUnique<T>(this IEnumerable<T> source!!, IEnumerable<T> other!!, IEqualityComparer<T>? equalityComparer = null)
+    public static IEnumerable<T> PlusUnique<T>(this IEnumerable<T> source!!, IEnumerable<T> other!!)
     {
-        var set = new HashSet<T>(source, equalityComparer);
+        var set = new HashSet<T>(source);
+        foreach (var element in other)
+            if (!set.Contains(element))
+                set.Add(element);
+            else
+                set.Remove(element);
+        return set;
+    }
+    public static IEnumerable<T> PlusUnique<T>(this IEnumerable<T> source!!, IEnumerable<T> other!!, IEqualityComparer<T>? comparer)
+    {
+        var set = new HashSet<T>(source, comparer);
         foreach (var element in other)
             if (!set.Contains(element))
                 set.Add(element);
