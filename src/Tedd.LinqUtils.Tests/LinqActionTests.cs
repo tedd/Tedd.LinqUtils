@@ -1,5 +1,7 @@
 using System;
 
+using FluentAssertions;
+
 using Xunit;
 
 namespace Tedd.LinqUtils.Tests;
@@ -32,4 +34,3 @@ public class LinqActionTests
         Assert.Equal(items.Length, count);
     }
 }
-public class LinqUtilsTests { }
