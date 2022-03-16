@@ -18,13 +18,13 @@ public static class LinqUtils
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<T> CountTo<T>(this IEnumerable<T> source!!, Action<int> count!!)
     {
-        var count = 0;
+        var counter = 0;
         foreach (var item in source)
         {
-            count++;
+            counter++;
             yield return item;
         }
-        count.Invoke(count);
+        count.Invoke(counter);
     }
 
 

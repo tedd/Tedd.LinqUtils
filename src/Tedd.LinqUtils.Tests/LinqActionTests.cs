@@ -1,4 +1,6 @@
 using System;
+using System.Drawing;
+using System.Linq;
 
 using FluentAssertions;
 
@@ -13,8 +15,10 @@ public class LinqActionTests
     {
         var count = 0;
         var items = new[] { 1, 2, 3 };
-        items.Action(n => Assert.Equal(items[count++], n));
-        Assert.Equal(items.Length, count);
+        var remaining = items.Action(n => Assert.Equal(items[count++], n)).ToArray();
+
+        items.Should().HaveCount(count);
+        items.Should().Equal(remaining);
     }
 
     [Theory]
@@ -29,8 +33,10 @@ public class LinqActionTests
         for (var i = 0; i < size; i++)
             items[i] = rnd.Next();
 
-        items.Action(n => Assert.Equal(items[count++], n));
-        Assert.Equal(size, items.Length);
-        Assert.Equal(items.Length, count);
+        var remaining = items.Action(n => Assert.Equal(items[count++], n)).ToArray();
+
+        items.Should().HaveCount(size);
+        count.Should().Be(size);
+        items.Should().Equal(remaining);
     }
 }

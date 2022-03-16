@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Tedd;
 
-    public static class LinqActionMethods
-    {
+public static class LinqActionMethods
+{
     /// <summary>
     /// Perform an action for each item in collection. Same as ForEach.
     /// </summary>
@@ -27,8 +27,10 @@ namespace Tedd;
     public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source!!, Action<T> action!!)
     {
         foreach (var element in source)
+        {
             action(element);
-        return source;
+            yield return element;
+        }
     }
 }
 

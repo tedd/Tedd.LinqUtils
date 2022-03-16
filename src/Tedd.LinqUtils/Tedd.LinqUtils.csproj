@@ -7,8 +7,8 @@
 		<PackageProjectUrl>https://github.com/tedd/Tedd.LinqUtils</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/tedd/Tedd.LinqUtils.git</RepositoryUrl>
 		<PackageTags>Linq;ForEach;JoinStrings;StringJoin;Plus;Minus;Unique</PackageTags>
-		<Description>Linq extensions such as .Foreach, .Unique, .NotNull,  .JoinStrings</Description>
-		<Version>0.0.1-preview2</Version>
+		<Description>Linq extensions ForEach, Delta, Unique, If/ElseIf/Else, NotNull, StringJoin</Description>
+		<Version>0.0.1-preview3</Version>
 
 		<Authors>tedd</Authors>
 		<Company>Tedd Hansen</Company>

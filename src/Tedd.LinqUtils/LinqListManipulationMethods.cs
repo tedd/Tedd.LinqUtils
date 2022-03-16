@@ -116,7 +116,7 @@ public static class LinqListManipulationMethods
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="source"></param>
-    /// <param name="useCryptoGradeRandom">Uses crypto grade random by utilizing the operating systems underlying CSP (Cryptographic Service Provider) for better random data.</param>
+    /// <param name="useCryptoGradeRandom">Use crypto grade random by utilizing the operating systems underlying CSP (Cryptographic Service Provider) for better random data.</param>
     /// <returns></returns>
     public unsafe static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source!!, bool useCryptoGradeRandom = false)
     {
@@ -161,8 +161,24 @@ public static class LinqListManipulationMethods
         return elements;
     }
 
-
-    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// <summary>
+    /// Calculates delta lists of two lists.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="first">First list of elements.</param>
+    /// <param name="second">Second list of elements.</param>
+    /// <returns>OnlyInFirst, OnlyInSecond, InBoth</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static (List<T> OnlyInFirst, List<T> OnlyInSecond, List<T> InBoth) DeltaLists<T>(this IEnumerable<T> first!!, IEnumerable<T> second!!) => first.DeltaLists(second, null);
+    
+    /// <summary>
+    /// Calculates delta lists of two lists using custom comparer.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="first">First list of elements.</param>
+    /// <param name="second">Second list of elements.</param>
+    /// <param name="comparer">Optional custom comparer.</param>
+    /// <returns>OnlyInFirst, OnlyInSecond, InBoth</returns>
     public static (List<T> OnlyInFirst, List<T> OnlyInSecond, List<T> InBoth) DeltaLists<T>(this IEnumerable<T> first!!, IEnumerable<T> second!!, IEqualityComparer<T>? comparer = null)
     {
         // We need to iterate data twice (creating hashset, IEnumerable won't allow that. So we copy data.
@@ -198,35 +214,6 @@ public static class LinqListManipulationMethods
         onlyInFirst.TrimExcess();
         onlyInSecond.TrimExcess();
         common.TrimExcess();
-
-        return (onlyInFirst, onlyInSecond, common);
-    }
-
-    public static (List<T> OnlyInFirst, List<T> OnlyInSecond, List<T> InBoth) DeltaListsUnique<T>(this IEnumerable<T> first!!, IEnumerable<T> second!!, IEqualityComparer<T>? comparer = null)
-    {
-        // We will use hashset for fast lookup
-        var firstHashSet = new HashSet<T>(first, comparer);
-        var secondHashSet = new HashSet<T>(second, comparer);
-
-        var onlyInFirst = new List<T>();
-        var onlyInSecond = new List<T>();
-        var common = new List<T>();
-
-        // We iterate the array, not the hashset, since we want to add duplicates if they exist
-        foreach (var element in firstHashSet)
-        {
-            if (secondHashSet.Contains(element))
-                common.Add(element);
-            else
-                onlyInFirst.Add(element);
-        }
-        foreach (var element in secondHashSet)
-        {
-            if (firstHashSet.Contains(element))
-                common.Add(element);
-            else
-                onlyInFirst.Add(element);
-        }
 
         return (onlyInFirst, onlyInSecond, common);
     }

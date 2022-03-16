@@ -25,6 +25,13 @@ public static class LinqStringMethods
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string StringJoin<T>(this IEnumerable<T> source!!, char separator) => string.Join(separator, source);
+    ///// <summary>
+    ///// Same as: .Select(w => Trim(w))
+    ///// </summary>
+    ///// <param name="source"></param>
+    ///// <returns></returns>
+    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    //public static IEnumerable<string> StringTrim(this IEnumerable<string> source!!) => source.Where(w => !string.IsNullOrWhiteSpace(w));
 
 }
 

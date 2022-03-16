@@ -23,6 +23,14 @@ public struct ConditionalIEnumerable<T> : IEnumerable<T>
 
 public static class LinqConditionalMethods
 {
+    /// <summary>
+    /// Conditionally adds linq method to the linq chain.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source"></param>
+    /// <param name="enabled">True if linq statement is added</param>
+    /// <param name="linqAction">Linq method to add.</param>
+    /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ConditionalIEnumerable<T> If<T>(this IEnumerable<T> source!!, bool enabled, Func<IEnumerable<T>, IEnumerable<T>> linqAction!!)
     {
@@ -30,6 +38,15 @@ public static class LinqConditionalMethods
             source = linqAction(source);
         return new ConditionalIEnumerable<T>(source, enabled);
     }
+
+    /// <summary>
+    /// Conditionally adds linq method to the linq chain.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source"></param>
+    /// <param name="enabled">True if linq statement is added</param>
+    /// <param name="linqAction">Linq method to add.</param>
+    /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ConditionalIEnumerable<T> ElseIf<T>(this ConditionalIEnumerable<T> source, bool enabled, Func<IEnumerable<T>, IEnumerable<T>> linqAction!!)
     {
@@ -37,6 +54,14 @@ public static class LinqConditionalMethods
             return new ConditionalIEnumerable<T>(linqAction(source.Enumerable), true);
         return source;
     }
+
+    /// <summary>
+    /// Conditionally adds linq method to the linq chain.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source"></param>
+    /// <param name="linqAction">Linq method to add.</param>
+    /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<T> Else<T>(this ConditionalIEnumerable<T> source, Func<IEnumerable<T>, IEnumerable<T>> linqAction!!)
     {
@@ -44,8 +69,6 @@ public static class LinqConditionalMethods
             return linqAction(source.Enumerable);
         return source.Enumerable;
     }
-
-
 }
 
 
