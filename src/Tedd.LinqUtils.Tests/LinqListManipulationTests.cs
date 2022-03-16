@@ -62,7 +62,9 @@ public class LinqListManipulationTests
     }
 
 
+#pragma warning disable xUnit1013 // Public method should be marked as test
     public void AppendMany(IEnumerable<int> items2)
+#pragma warning restore xUnit1013 // Public method should be marked as test
     {
         var items1 = new int[] { 0, 1, 2, 3 };
         var appended = items1.Append(items2).ToArray();
@@ -76,7 +78,9 @@ public class LinqListManipulationTests
     public void AppendListTest() => AppendMany(new List<int> { 4, 5, 6, 7 });
     [Fact]
     public void AppendIEnumerableTest() => AppendMany((new int[] { 4, 5, 6, 7 }).Select(s => s));
+#pragma warning disable xUnit1013 // Public method should be marked as test
     public void PrependMany(IEnumerable<int> items2)
+#pragma warning restore xUnit1013 // Public method should be marked as test
     {
         var items1 = new int[] { 4, 5, 6, 7 };
         var Prepended = items1.Prepend(items2).ToArray();

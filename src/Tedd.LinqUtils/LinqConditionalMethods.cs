@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Tedd;
 
-public struct ConditionalIEnumerable<T> : IEnumerable<T>
+public record struct ConditionalIEnumerable<T> : IEnumerable<T>
 {
     internal readonly IEnumerable<T> Enumerable;
     internal readonly bool BranchClosed;

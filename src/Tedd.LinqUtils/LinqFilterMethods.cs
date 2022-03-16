@@ -32,12 +32,5 @@ public static class LinqFilterMethods
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<string> WhereIsNotNullOrWhiteSpace(this IEnumerable<string> source!!) => source.Where(w => !string.IsNullOrWhiteSpace(w));
 
-    /// <summary>
-    /// Same as: .Select(w => Trim(w))
-    /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<string> StringTrim(this IEnumerable<string> source!!) => source.Where(w => !string.IsNullOrWhiteSpace(w));
 
 }
