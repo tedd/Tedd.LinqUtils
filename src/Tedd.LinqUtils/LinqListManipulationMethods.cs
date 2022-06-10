@@ -8,7 +8,6 @@ using System.Text;
 
 namespace Tedd;
 
-
 public static class LinqListManipulationMethods
 {
     /// <summary>
@@ -112,13 +111,13 @@ public static class LinqListManipulationMethods
     }
 
     /// <summary>
-    /// Shufle elements randomly.
+    /// Shuffle elements randomly.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="source"></param>
     /// <param name="useCryptoGradeRandom">Use crypto grade random by utilizing the operating systems underlying CSP (Cryptographic Service Provider) for better random data.</param>
     /// <returns></returns>
-    public unsafe static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source!!, bool useCryptoGradeRandom = false)
+    public static unsafe IEnumerable<T> Shuffle<T>(this IEnumerable<T> source!!, bool useCryptoGradeRandom = false)
     {
         Random? rnd = null;
         RandomNumberGenerator? rng = null;
@@ -161,16 +160,21 @@ public static class LinqListManipulationMethods
         return elements;
     }
 
-    /// <summary>
-    /// Calculates delta lists of two lists.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="first">First list of elements.</param>
-    /// <param name="second">Second list of elements.</param>
-    /// <returns>OnlyInFirst, OnlyInSecond, InBoth</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static (List<T> OnlyInFirst, List<T> OnlyInSecond, List<T> InBoth) DeltaLists<T>(this IEnumerable<T> first!!, IEnumerable<T> second!!) => first.DeltaLists(second, null);
-    
+    ///// <summary>
+    ///// Calculates delta lists of two lists.
+    ///// </summary>
+    ///// <typeparam name="T"></typeparam>
+    ///// <param name="first">First list of elements.</param>
+    ///// <param name="second">Second list of elements.</param>
+    ///// <returns>OnlyInFirst, OnlyInSecond, InBoth</returns>
+    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    //public static DeltaResult<T> DeltaLists<T>(this IEnumerable<T> first, IEnumerable<T> second)
+    //{
+    //    if (first == null) throw new ArgumentNullException(nameof(first));
+    //    if (second == null) throw new ArgumentNullException(nameof(second));
+    //    return first.DeltaLists(second, null);
+    //}
+
     /// <summary>
     /// Calculates delta lists of two lists using custom comparer.
     /// </summary>
@@ -179,8 +183,10 @@ public static class LinqListManipulationMethods
     /// <param name="second">Second list of elements.</param>
     /// <param name="comparer">Optional custom comparer.</param>
     /// <returns>OnlyInFirst, OnlyInSecond, InBoth</returns>
-    public static (List<T> OnlyInFirst, List<T> OnlyInSecond, List<T> InBoth) DeltaLists<T>(this IEnumerable<T> first!!, IEnumerable<T> second!!, IEqualityComparer<T>? comparer = null)
+    public static DeltaResult<T> DeltaLists<T>(this IEnumerable<T> first, IEnumerable<T> second, IEqualityComparer<T>? comparer = null)
     {
+        if (first == null) throw new ArgumentNullException(nameof(first));
+        if (second == null) throw new ArgumentNullException(nameof(second));
         // We need to iterate data twice (creating hashset, IEnumerable won't allow that. So we copy data.
         var firstArray = first.ToArray();
         var secondArray = second.ToArray();
@@ -215,7 +221,7 @@ public static class LinqListManipulationMethods
         onlyInSecond.TrimExcess();
         common.TrimExcess();
 
-        return (onlyInFirst, onlyInSecond, common);
+        return new (onlyInFirst, onlyInSecond, common);
     }
 
 }
