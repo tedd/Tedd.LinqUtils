@@ -18,7 +18,12 @@ public static class LinqListManipulationMethods
     /// <param name="other">List of elements to remove.</param>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<T> Remove<T>(this IEnumerable<T> source!!, IEnumerable<T> other!!) => source.Remove(other, null);
+    public static IEnumerable<T> Remove<T>(this IEnumerable<T> source, IEnumerable<T> other)
+    {
+        if (source == null) throw new ArgumentNullException(nameof(source));
+        if (other == null) throw new ArgumentNullException(nameof(other));
+        return source.Remove(other, null);
+    }
 
     /// <summary>
     /// Remove all elements that exist in other list using custom comparer.
@@ -28,8 +33,10 @@ public static class LinqListManipulationMethods
     /// <param name="other">List of elements to remove.</param>
     /// <param name="comparer">Custom comparer.</param>
     /// <returns></returns>
-    public static IEnumerable<T> Remove<T>(this IEnumerable<T> source!!, IEnumerable<T> other!!, IEqualityComparer<T>? comparer)
+    public static IEnumerable<T> Remove<T>(this IEnumerable<T> source, IEnumerable<T> other, IEqualityComparer<T>? comparer)
     {
+        if (source == null) throw new ArgumentNullException(nameof(source));
+        if (other == null) throw new ArgumentNullException(nameof(other));
         var set = new HashSet<T>(other, comparer);
         foreach (var element in source)
         {
@@ -44,8 +51,10 @@ public static class LinqListManipulationMethods
     /// <param name="source">List of elements.</param>
     /// <param name="other">Element to append.</param>
     /// <returns></returns>
-    public static IEnumerable<T> Append<T>(this IEnumerable<T> source!!, T other!!)
+    public static IEnumerable<T> Append<T>(this IEnumerable<T> source, T other)
     {
+        if (source == null) throw new ArgumentNullException(nameof(source));
+        if (other == null) throw new ArgumentNullException(nameof(other));
         foreach (var element in source)
             yield return element;
         yield return other;
@@ -58,8 +67,10 @@ public static class LinqListManipulationMethods
     /// <param name="source">List of elements.</param>
     /// <param name="other">List of elements to append.</param>
     /// <returns></returns>
-    public static IEnumerable<T> Append<T>(this IEnumerable<T> source!!, IEnumerable<T> other!!)
+    public static IEnumerable<T> Append<T>(this IEnumerable<T> source, IEnumerable<T> other)
     {
+        if (source == null) throw new ArgumentNullException(nameof(source));
+        if (other == null) throw new ArgumentNullException(nameof(other));
         foreach (var element in source)
             yield return element;
         foreach (var element in other)
@@ -73,8 +84,10 @@ public static class LinqListManipulationMethods
     /// <param name="source">List of elements.</param>
     /// <param name="other">List of elements to prepend.</param>
     /// <returns></returns>
-    public static IEnumerable<T> Prepend<T>(this IEnumerable<T> source!!, IEnumerable<T> other!!)
+    public static IEnumerable<T> Prepend<T>(this IEnumerable<T> source, IEnumerable<T> other)
     {
+        if (source == null) throw new ArgumentNullException(nameof(source));
+        if (other == null) throw new ArgumentNullException(nameof(other));
         foreach (var element in other)
             yield return element;
         foreach (var element in source)
@@ -89,7 +102,13 @@ public static class LinqListManipulationMethods
     /// <param name="source">List of elements.</param>
     /// <param name="other">List of elements to append.</param>
     /// <returns></returns>
-    public static IEnumerable<T> AppendDistinct<T>(this IEnumerable<T> source!!, IEnumerable<T> other!!) => source.AppendDistinct(other, null);
+    public static IEnumerable<T> AppendDistinct<T>(this IEnumerable<T> source, IEnumerable<T> other)
+    {
+        if (source == null) throw new ArgumentNullException(nameof(source));
+        if (other == null) throw new ArgumentNullException(nameof(other));
+        return source.AppendDistinct(other, null);
+    }
+
     /// <summary>
     /// Append elements only if they do not already exist in list using custom comparer.
     /// </summary>
@@ -98,8 +117,10 @@ public static class LinqListManipulationMethods
     /// <param name="other">List of elements to append.</param>
     /// <param name="comparer">Custom comparer.</param>
     /// <returns></returns>
-    public static IEnumerable<T> AppendDistinct<T>(this IEnumerable<T> source!!, IEnumerable<T> other!!, IEqualityComparer<T>? comparer)
+    public static IEnumerable<T> AppendDistinct<T>(this IEnumerable<T> source, IEnumerable<T> other, IEqualityComparer<T>? comparer)
     {
+        if (source == null) throw new ArgumentNullException(nameof(source));
+        if (other == null) throw new ArgumentNullException(nameof(other));
         var set = new HashSet<T>(comparer);
         foreach (var element in source)
             if (set.Add(element))
@@ -117,8 +138,9 @@ public static class LinqListManipulationMethods
     /// <param name="source"></param>
     /// <param name="useCryptoGradeRandom">Use crypto grade random by utilizing the operating systems underlying CSP (Cryptographic Service Provider) for better random data.</param>
     /// <returns></returns>
-    public static unsafe IEnumerable<T> Shuffle<T>(this IEnumerable<T> source!!, bool useCryptoGradeRandom = false)
+    public static unsafe IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, bool useCryptoGradeRandom = false)
     {
+        if (source == null) throw new ArgumentNullException(nameof(source));
         Random? rnd = null;
         RandomNumberGenerator? rng = null;
         Span<byte> bytes = stackalloc byte[4];

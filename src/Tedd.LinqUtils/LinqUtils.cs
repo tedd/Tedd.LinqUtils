@@ -17,8 +17,10 @@ public static class LinqUtils
     /// </summary>
     /// <param name="count">Action executed with number of items as parameter once count is done.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<T> CountTo<T>(this IEnumerable<T> source!!, Action<int> count!!)
+    public static IEnumerable<T> CountTo<T>(this IEnumerable<T> source, Action<int> count)
     {
+        if (source == null) throw new ArgumentNullException(nameof(source));
+        if (count == null) throw new ArgumentNullException(nameof(count));
         var counter = 0;
         foreach (var item in source)
         {

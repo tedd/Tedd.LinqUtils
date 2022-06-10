@@ -32,8 +32,10 @@ public static class LinqConditionalMethods
     /// <param name="linqAction">Linq method to add.</param>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ConditionalIEnumerable<T> If<T>(this IEnumerable<T> source!!, bool enabled, Func<IEnumerable<T>, IEnumerable<T>> linqAction!!)
+    public static ConditionalIEnumerable<T> If<T>(this IEnumerable<T> source, bool enabled, Func<IEnumerable<T>, IEnumerable<T>> linqAction)
     {
+        if (source == null) throw new ArgumentNullException(nameof(source));
+        if (linqAction == null) throw new ArgumentNullException(nameof(linqAction));
         if (enabled)
             source = linqAction(source);
         return new ConditionalIEnumerable<T>(source, enabled);
@@ -48,8 +50,9 @@ public static class LinqConditionalMethods
     /// <param name="linqAction">Linq method to add.</param>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ConditionalIEnumerable<T> ElseIf<T>(this ConditionalIEnumerable<T> source, bool enabled, Func<IEnumerable<T>, IEnumerable<T>> linqAction!!)
+    public static ConditionalIEnumerable<T> ElseIf<T>(this ConditionalIEnumerable<T> source, bool enabled, Func<IEnumerable<T>, IEnumerable<T>> linqAction)
     {
+        if (linqAction == null) throw new ArgumentNullException(nameof(linqAction));
         if (!source.BranchClosed && enabled)
             return new ConditionalIEnumerable<T>(linqAction(source.Enumerable), true);
         return source;
@@ -63,8 +66,9 @@ public static class LinqConditionalMethods
     /// <param name="linqAction">Linq method to add.</param>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<T> Else<T>(this ConditionalIEnumerable<T> source, Func<IEnumerable<T>, IEnumerable<T>> linqAction!!)
+    public static IEnumerable<T> Else<T>(this ConditionalIEnumerable<T> source, Func<IEnumerable<T>, IEnumerable<T>> linqAction)
     {
+        if (linqAction == null) throw new ArgumentNullException(nameof(linqAction));
         if (!source.BranchClosed)
             return linqAction(source.Enumerable);
         return source.Enumerable;

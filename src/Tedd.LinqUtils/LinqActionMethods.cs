@@ -15,7 +15,13 @@ public static class LinqActionMethods
     /// <param name="action">Action to execute for each item in collection.</param>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<T> Action<T>(this IEnumerable<T> source!!, Action<T> action!!) => ForEach(source, action);
+    public static IEnumerable<T> Action<T>(this IEnumerable<T> source, Action<T> action)
+    {
+        if (source == null) throw new ArgumentNullException(nameof(source));
+        if (action == null) throw new ArgumentNullException(nameof(action));
+        return ForEach(source, action);
+    }
+
     /// <summary>
     /// Executed action for each item in collection.
     /// </summary>
@@ -24,8 +30,10 @@ public static class LinqActionMethods
     /// <param name="action">Action to execute for each item in collection.</param>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source!!, Action<T> action!!)
+    public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
     {
+        if (source == null) throw new ArgumentNullException(nameof(source));
+        if (action == null) throw new ArgumentNullException(nameof(action));
         foreach (var element in source)
         {
             action(element);
