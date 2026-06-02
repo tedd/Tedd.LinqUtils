@@ -14,7 +14,7 @@ public class LinqFilterTests
         var newItems = items!.WhereIsNotNull().ToArray();
 
         Assert.Equal(4, newItems.Length);
-        Assert.DoesNotContain(null, newItems);
+        Assert.DoesNotContain((string?)null, newItems);
     }
 
     [Fact]
@@ -24,7 +24,7 @@ public class LinqFilterTests
         var newItems = items!.WhereIsNotNullOrEmpty().ToArray();
 
         Assert.Equal(2, newItems.Length);
-        Assert.DoesNotContain(null, newItems);
+        Assert.DoesNotContain((string?)null, newItems);
         Assert.DoesNotContain("", newItems);
         Assert.DoesNotContain(string.Empty, newItems);
     }
@@ -36,7 +36,7 @@ public class LinqFilterTests
         var newItems = items!.WhereIsNotNullOrWhiteSpace().ToArray();
 
         Assert.Single(newItems);
-        Assert.DoesNotContain(null, newItems);
+        Assert.DoesNotContain((string?)null, newItems);
         Assert.DoesNotContain("", newItems);
         Assert.DoesNotContain(string.Empty, newItems);
         Assert.DoesNotContain("  ", newItems);
