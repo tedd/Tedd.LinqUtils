@@ -25,9 +25,9 @@ public class LinqUtilsTests
             .Where(w => w >= 10)
             .CountTo(x => filteredCount = x)
             .ToArray();
-        
+
         totalCount.Should().Be(size);
-        filteredCount.Should().Be(Math.Max(0,size-10));
+        filteredCount.Should().Be(Math.Max(0, size - 10));
         filteredCount.Should().Be(filtered.Length);
     }
 }

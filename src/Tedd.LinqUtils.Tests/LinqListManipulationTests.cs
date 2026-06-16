@@ -8,6 +8,7 @@ using FluentAssertions;
 using Xunit;
 
 namespace Tedd.LinqUtils.Tests;
+
 public class LinqListManipulationTests
 {
 
@@ -50,7 +51,7 @@ public class LinqListManipulationTests
     {
         RemoveTestInt(100, new ComparableObjectIntComparer());
     }
- 
+
     [Fact]
     public void AppendTest()
     {
@@ -154,11 +155,11 @@ public class LinqListManipulationTests
         for (var i = 0; i < size; i++)
             items[i] = i;
         ShuffleTestArray(items, useCryptoGradeRandom: true);
-        ShuffleTestArray(items.ToList(), useCryptoGradeRandom:true);
-        ShuffleTestArray(items.Select(s => s), useCryptoGradeRandom:true);
+        ShuffleTestArray(items.ToList(), useCryptoGradeRandom: true);
+        ShuffleTestArray(items.Select(s => s), useCryptoGradeRandom: true);
         ShuffleTestArray(items, useCryptoGradeRandom: false);
-        ShuffleTestArray(items.ToList(), useCryptoGradeRandom:false);
-        ShuffleTestArray(items.Select(s => s), useCryptoGradeRandom:false);
+        ShuffleTestArray(items.ToList(), useCryptoGradeRandom: false);
+        ShuffleTestArray(items.Select(s => s), useCryptoGradeRandom: false);
     }
 
     [Fact]

@@ -1,13 +1,12 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Tedd;
+namespace Tedd.Archive;
 
 public static class LinqListManipulationMethods
 {
@@ -183,10 +182,23 @@ public static class LinqListManipulationMethods
         return elements;
     }
 
+    ///// <summary>
+    ///// Calculates delta lists of two lists.
+    ///// </summary>
+    ///// <typeparam name="T"></typeparam>
+    ///// <param name="first">First list of elements.</param>
+    ///// <param name="second">Second list of elements.</param>
+    ///// <returns>OnlyInFirst, OnlyInSecond, InBoth</returns>
+    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+    //public static DeltaResult<T> DeltaLists<T>(this IEnumerable<T> first, IEnumerable<T> second)
+    //{
+    //    if (first == null) throw new ArgumentNullException(nameof(first));
+    //    if (second == null) throw new ArgumentNullException(nameof(second));
+    //    return first.DeltaLists(second, null);
+    //}
+
     /// <summary>
     /// Calculates delta lists of two lists using custom comparer.
-    /// Time complexity: O(N+M) where N and M are the lengths of the first and second sequences.
-    /// Space complexity: O(N+M) worst case.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="first">First list of elements.</param>
@@ -197,17 +209,20 @@ public static class LinqListManipulationMethods
     {
         if (first == null) throw new ArgumentNullException(nameof(first));
         if (second == null) throw new ArgumentNullException(nameof(second));
+        // We need to iterate data twice (creating hashset, IEnumerable won't allow that. So we copy data.
+        var firstArray = first.ToArray();
+        var secondArray = second.ToArray();
 
-        var firstArray = first as T[] ?? first.ToArray();
-        var secondArray = second as T[] ?? second.ToArray();
-
+        // We will use hashset for fast lookup
         var firstHashSet = new HashSet<T>(firstArray, comparer);
         var secondHashSet = new HashSet<T>(secondArray, comparer);
 
+        // Allocate max memory possible, we'll trim at the end. This to avoid too many reallocations.
         var onlyInFirst = new List<T>(firstArray.Length);
         var onlyInSecond = new List<T>(secondArray.Length);
         var common = new List<T>(Math.Max(firstArray.Length, secondArray.Length));
 
+        // We iterate the array, not the hashset, since we want to add duplicates if they exist
         foreach (var element in firstArray)
         {
             if (secondHashSet.Contains(element))
@@ -223,6 +238,7 @@ public static class LinqListManipulationMethods
                 onlyInSecond.Add(element);
         }
 
+        // Trim away excess memory
         onlyInFirst.TrimExcess();
         onlyInSecond.TrimExcess();
         common.TrimExcess();
@@ -232,8 +248,6 @@ public static class LinqListManipulationMethods
 
     /// <summary>
     /// Calculates delta lists of two lists using custom comparer.
-    /// Time complexity: O(N+M) where N and M are the lengths of the first and second sequences.
-    /// Space complexity: O(N+M) worst case.
     /// </summary>
     /// <typeparam name="TFirst">First list.</typeparam>
     /// <typeparam name="TSecond">Second list</typeparam>
@@ -247,17 +261,21 @@ public static class LinqListManipulationMethods
         if (second == null) throw new ArgumentNullException(nameof(second));
         if (selector == null) throw new ArgumentNullException(nameof(selector));
 
-        var firstArray = first as TFirst[] ?? first.ToArray();
-        var secondArray = second as TSecond[] ?? second.ToArray();
+        // We need to iterate data twice (creating hashset, IEnumerable won't allow that. So we copy data.
+        var firstArray = first.ToArray();
+        var secondArray = second.ToArray();
 
+        // We will use hashset for fast lookup
         var secondArraySelected = secondArray.Select(selector).ToArray();
         var firstHashSet = new HashSet<TFirst>(firstArray, comparer);
         var secondHashSet = new HashSet<TFirst>(secondArraySelected, comparer);
 
+        // Allocate max memory possible, we'll trim at the end. This to avoid too many reallocations.
         var onlyInFirst = new List<TFirst>(firstArray.Length);
         var onlyInSecond = new List<TSecond>(secondArray.Length);
         var common = new List<TFirst>(Math.Max(firstArray.Length, secondArray.Length));
 
+        // We iterate the array, not the hashset, since we want to add duplicates if they exist
         foreach (var element in firstArray)
         {
             if (secondHashSet.Contains(element))
@@ -274,6 +292,7 @@ public static class LinqListManipulationMethods
                 onlyInSecond.Add(element);
         }
 
+        // Trim away excess memory
         onlyInFirst.TrimExcess();
         onlyInSecond.TrimExcess();
         common.TrimExcess();
