@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Tedd.LinqUtils.Tests
 {
     [DebuggerDisplay("{Value}")]
-    internal class ComparableObjectStr 
+    internal class ComparableObjectStr
     {
         public ComparableObjectStr(string value) => Value = value;
         public string Value;
@@ -22,7 +22,7 @@ namespace Tedd.LinqUtils.Tests
         public int GetHashCode([DisallowNull] ComparableObjectStr obj) => obj.Value.GetHashCode();
     }
     [DebuggerDisplay("{Value}")]
-    internal class ComparableObjectInt 
+    internal class ComparableObjectInt
     {
         public ComparableObjectInt(int value) => Value = value;
         public int Value;

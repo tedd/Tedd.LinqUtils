@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-[assembly:CLSCompliant(true)]
+[assembly: CLSCompliant(true)]
 namespace Tedd;
 
 public static class LinqUtils
