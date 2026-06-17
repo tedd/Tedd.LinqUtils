@@ -6,8 +6,9 @@
 - Outdated dependencies in test project: `coverlet.collector`, `Microsoft.NET.Test.Sdk`, `xunit`, `xunit.runner.visualstudio`.
 
 **Strategic Action:**
-- Upgrade `Tedd.LinqUtils` to multi-target `netstandard2.1;net8.0;net9.0`.
+- Upgrade `Tedd.LinqUtils` to multi-target `netstandard2.1;net6.0;net8.0;net9.0`.
 - Upgrade `Tedd.LinqUtils.Tests` to multi-target `net6.0;net8.0;net9.0`.
+- Update outdated test dependencies to their latest stable versions.
 - Update outdated test dependencies to their latest stable versions.
 
 ## 2024-06-02 - Microsoft.NET.Test.Sdk Compatibility
