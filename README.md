@@ -6,18 +6,26 @@ Various useful LINQ extension methods.
 * Attempt at minimizing allocations.
 * Optimized for large collections in mind, streaming wherever possible.
 
-## Action methods
+## Architectural Paradigm
 
-Perform an action on collection, forwards collection in the chain.
+The framework operates via stateless, functional LINQ extension methods executing against `IEnumerable<T>`.  Capabilities prioritize lazy evaluation and streaming to minimize memory allocations when processing extensive data structures.  The framework explicitly **does not** utilize hierarchical data binding or routed event infrastructure; execution is deterministic and sequence-dependent.
+
+## Action and Utility methods
+
+Perform an action on a collection, forwarding the collection in the chain, or count items efficiently.
 
 ```c#
+// ForEach and Action execute a delegate per item while streaming the collection.
 collection
     .ForEach(item => foobar(item))
-    .ForEach(item => anotherfoobar(item));
+    .Action(item => anotherfoobar(item));
 // Would be same as
 collection
     .Select(item => { foobar(item); return item; })
     .Select(item => { anotherFoobar(item); return item; });
+
+// Count items and trigger a callback upon completion of the enumeration
+var result = collection.CountTo(count => Console.WriteLine($"Processed {count} items"));
 ```
 
 ## Conditional methods
@@ -72,8 +80,10 @@ var shuffled = collection.Shuffle();
 
 // Calculate difference between two lists
 // Note: Requires loading of full collection to memory.
-var delta = firstCollection.Delta(secondCollection);
-// delta tuple now contains lists OnlyInFirst, OnlyInSecond and InBoth
+var delta = firstCollection.DeltaLists(secondCollection);
+var deltaWithComparer = firstCollection.DeltaLists(secondCollection, customComparer);
+var deltaWithSelector = firstCollection.DeltaLists(secondCollection, x => x.Id);
+// delta object of type DeltaResult contains lists OnlyInFirst, OnlyInSecond and InBoth
 ```
 
 ## String methods
@@ -95,5 +105,5 @@ var hashSet = collection.ToHashSet();
 var hashSet = collection.ToHashSet(comparer);
 var concurrentQueue = collection.ToConcurrentQueue();
 var concurrentStack = collection.ToConcurrentStack();
-var concurrengBag = collection.ToConcurrentBag();
+var concurrentBag = collection.ToConcurrentBag();
 ```
