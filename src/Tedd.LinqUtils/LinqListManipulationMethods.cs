@@ -250,9 +250,16 @@ public static class LinqListManipulationMethods
         var firstArray = first as TFirst[] ?? first.ToArray();
         var secondArray = second as TSecond[] ?? second.ToArray();
 
-        var secondArraySelected = secondArray.Select(selector).ToArray();
         var firstHashSet = new HashSet<TFirst>(firstArray, comparer);
-        var secondHashSet = new HashSet<TFirst>(secondArraySelected, comparer);
+#if NET8_0_OR_GREATER || NET6_0_OR_GREATER || NETSTANDARD2_1_OR_GREATER
+        var secondHashSet = new HashSet<TFirst>(secondArray.Length, comparer);
+#else
+        var secondHashSet = new HashSet<TFirst>(comparer);
+#endif
+        foreach (var element in secondArray)
+        {
+            secondHashSet.Add(selector(element));
+        }
 
         var onlyInFirst = new List<TFirst>(firstArray.Length);
         var onlyInSecond = new List<TSecond>(secondArray.Length);
