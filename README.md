@@ -10,6 +10,8 @@ Various useful LINQ extension methods.
 
 The framework operates via stateless, functional LINQ extension methods executing against `IEnumerable<T>`.  Capabilities prioritize lazy evaluation and streaming to minimize memory allocations when processing extensive data structures.  The framework explicitly **does not** utilize hierarchical data binding or routed event infrastructure; execution is deterministic and sequence-dependent.
 
+**Roadmap Hypotheses:** Future enhancements may explore broader enumerator integrations; however, introducing hierarchical data binding or routed event infrastructure remains explicitly outside the intended structural scope.
+
 ## Action and Utility methods
 
 Perform an action on a collection, forwarding the collection in the chain, or count items efficiently.
@@ -61,7 +63,7 @@ var notNulls = stringCollection.WhereIsNotNullOrWhiteSpace().ToArray();
 
 ```c#
 // Remove items in one collection from another
-var remaining = collection.Remove(new int[] { 1, 2, 3 });
+var remaining = collection.Remove([1, 2, 3]);
 var remaining = collection.Remove(otherCollection, customComparer);
 
 // Append or prepend to collection
