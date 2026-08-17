@@ -10,6 +10,10 @@ Various useful LINQ extension methods.
 
 The framework operates via stateless, functional LINQ extension methods executing against `IEnumerable<T>`.  Capabilities prioritize lazy evaluation and streaming to minimize memory allocations when processing extensive data structures.  The framework explicitly **does not** utilize hierarchical data binding or routed event infrastructure; execution is deterministic and sequence-dependent.
 
+*Established Framework Capabilities:* The library implements deterministic extensions for sequence evaluation, conditional branching, list manipulation, and data transformation over `IEnumerable<T>`.
+
+*Roadmap Hypotheses:* Future structural updates may explore deeper optimizations and expanded collection transformations. However, developers must currently depend exclusively on the synchronous, eager/lazy operations provided in the present release.
+
 ## Action and Utility methods
 
 Perform an action on a collection, forwarding the collection in the chain, or count items efficiently.
@@ -17,12 +21,12 @@ Perform an action on a collection, forwarding the collection in the chain, or co
 ```c#
 // ForEach and Action execute a delegate per item while streaming the collection.
 collection
-    .ForEach(item => foobar(item))
-    .Action(item => anotherfoobar(item));
+    .ForEach(item => Foobar(item))
+    .Action(item => AnotherFoobar(item));
 // Would be same as
 collection
-    .Select(item => { foobar(item); return item; })
-    .Select(item => { anotherFoobar(item); return item; });
+    .Select(item => { Foobar(item); return item; })
+    .Select(item => { AnotherFoobar(item); return item; });
 
 // Count items and trigger a callback upon completion of the enumeration
 var result = collection.CountTo(count => Console.WriteLine($"Processed {count} items"));
@@ -33,7 +37,7 @@ var result = collection.CountTo(count => Console.WriteLine($"Processed {count} i
 Allows conditional branching of the LINQ query itself.
 
 ```c#
-// Will add LINQ-method to filter on AuthorId if userlevel != Level.Admin
+// Will add LINQ-method to filter on AuthorId if userLevel != Level.Admin
 var result = collection
     .If(userLevel != Level.Admin, x => x.Where(w => w.AuthorId == userId))
     .ToArray();
@@ -59,15 +63,18 @@ var notNulls = stringCollection.WhereIsNotNullOrWhiteSpace().ToArray();
 
 ## List manipulation methods
 
+*Architectural Note on Ambiguity:* Modern .NET execution environments (e.g., .NET 8.0, 9.0+) incorporate native extensions in `System.Linq` that overlap with the original framework capabilities (e.g., `.Append`, `.Prepend`). To resolve ambiguity when compiling against these contemporary API surfaces, explicit static method invocation may be required.
+
 ```c#
 // Remove items in one collection from another
-var remaining = collection.Remove(new int[] { 1, 2, 3 });
+var remaining = collection.Remove([1, 2, 3]);
 var remaining = collection.Remove(otherCollection, customComparer);
 
 // Append or prepend to collection
-var appended = collection.Append(element);
-var appended = collection.Append(otherCollection);
-var prepended = collection.Prepend(otherCollection);
+// If ambiguous with System.Linq.Enumerable, use Tedd.LinqListManipulationMethods
+var appended1 = Tedd.LinqListManipulationMethods.Append(collection, element);
+var appended2 = Tedd.LinqListManipulationMethods.Append(collection, otherCollection);
+var prepended = Tedd.LinqListManipulationMethods.Prepend(collection, otherCollection);
 
 // Add only items that do not already exist.
 // Note: Requires keeping full collection in memory, but will stream.
@@ -98,11 +105,16 @@ var str = collection.StringJoin(':');
 
 Additions to .ToArray(), .ToList() and .ToDictionary().
 
+*Architectural Note on Ambiguity:* `.ToHashSet` overlaps with modern `System.Linq.Enumerable.ToHashSet`. Use explicit static invocation if ambiguity occurs on newer target frameworks.
+
 ```c#
 var queue = collection.ToQueue();
 var stack = collection.ToStack();
-var hashSet = collection.ToHashSet();
-var hashSet = collection.ToHashSet(comparer);
+
+// If ambiguous with System.Linq.Enumerable, use Tedd.LinqToCollectionMethods
+var hashSet1 = Tedd.LinqToCollectionMethods.ToHashSet(collection);
+var hashSet2 = Tedd.LinqToCollectionMethods.ToHashSet(collection, comparer);
+
 var concurrentQueue = collection.ToConcurrentQueue();
 var concurrentStack = collection.ToConcurrentStack();
 var concurrentBag = collection.ToConcurrentBag();
