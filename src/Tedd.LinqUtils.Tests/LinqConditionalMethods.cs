@@ -54,4 +54,24 @@ public class LinqConditionalMethods
             Assert.Equal(items[i] + 1000000, filtered[i]);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void GetEnumeratorTest(bool condition)
+    {
+        var items = new int[] { 1, 2, 3, 4 };
+        System.Collections.IEnumerable conditional = items.If(condition, x => x.Select(s => s + 1));
+
+        var enumerator = conditional.GetEnumerator();
+        Assert.NotNull(enumerator);
+
+        var count = 0;
+        while (enumerator.MoveNext())
+        {
+            var value = (int)enumerator.Current;
+            Assert.Equal(items[count] + (condition ? 1 : 0), value);
+            count++;
+        }
+        Assert.Equal(4, count);
+    }
 }
