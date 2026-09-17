@@ -16,16 +16,20 @@ Perform an action on a collection, forwarding the collection in the chain, or co
 
 ```c#
 // ForEach and Action execute a delegate per item while streaming the collection.
-collection
-    .ForEach(item => foobar(item))
-    .Action(item => anotherfoobar(item));
+// Ensure to materialize or iterate through the collection to trigger execution.
+_ = Tedd.LinqActionMethods.ForEach(collection, item => foobar(item))
+    .Action(item => anotherfoobar(item))
+    .ToArray();
+
 // Would be same as
-collection
+_ = collection
     .Select(item => { foobar(item); return item; })
-    .Select(item => { anotherFoobar(item); return item; });
+    .Select(item => { anotherfoobar(item); return item; })
+    .ToArray();
 
 // Count items and trigger a callback upon completion of the enumeration
 var result = collection.CountTo(count => Console.WriteLine($"Processed {count} items"));
+_ = result.ToArray();
 ```
 
 ## Conditional methods
@@ -44,7 +48,8 @@ var result = collection
     .ElseIf(userLevel == Level.SuperUser, x => x.Where(w => w.GroupId == groupId))
     .ElseIf(userLevel == Level.Moderator, x => x.Where(w => w.GroupId == groupId))
     .Else(x => x.Where(w => w.AuthorId == userId))
-    .Select(x => x.Title);
+    .Select(x => x.Title)
+    .ToArray();
 ```
 
 ## Filter methods
@@ -61,18 +66,18 @@ var notNulls = stringCollection.WhereIsNotNullOrWhiteSpace().ToArray();
 
 ```c#
 // Remove items in one collection from another
-var remaining = collection.Remove(new int[] { 1, 2, 3 });
+var remaining = collection.Remove([1, 2, 3]);
 var remaining = collection.Remove(otherCollection, customComparer);
 
 // Append or prepend to collection
-var appended = collection.Append(element);
-var appended = collection.Append(otherCollection);
-var prepended = collection.Prepend(otherCollection);
+var appended = Tedd.LinqListManipulationMethods.Append(collection, element);
+var appended = Tedd.LinqListManipulationMethods.Append(collection, otherCollection);
+var prepended = Tedd.LinqListManipulationMethods.Prepend(collection, otherCollection);
 
 // Add only items that do not already exist.
 // Note: Requires keeping full collection in memory, but will stream.
-var includesMissing = collection.AppendDistinct(otherCollection);
-var includesMissing = collection.AppendDistinct(otherCollection, comparer);
+var includesMissing = Tedd.LinqListManipulationMethods.AppendDistinct(collection, otherCollection);
+var includesMissing = Tedd.LinqListManipulationMethods.AppendDistinct(collection, otherCollection, comparer);
 
 // Shuffle / randomize order of a collection
 // Note: Requires loading of full collection to memory.
@@ -82,7 +87,7 @@ var shuffled = collection.Shuffle();
 // Note: Requires loading of full collection to memory.
 var delta = firstCollection.DeltaLists(secondCollection);
 var deltaWithComparer = firstCollection.DeltaLists(secondCollection, customComparer);
-var deltaWithSelector = firstCollection.DeltaLists(secondCollection, x => x.Id);
+var deltaWithSelector = firstCollection.DeltaLists(secondCollection, x => new FoobarClass { Id = x });
 // delta object of type DeltaResult contains lists OnlyInFirst, OnlyInSecond and InBoth
 ```
 
@@ -101,8 +106,8 @@ Additions to .ToArray(), .ToList() and .ToDictionary().
 ```c#
 var queue = collection.ToQueue();
 var stack = collection.ToStack();
-var hashSet = collection.ToHashSet();
-var hashSet = collection.ToHashSet(comparer);
+var hashSet = Tedd.LinqToCollectionMethods.ToHashSet(collection);
+var hashSet = Tedd.LinqToCollectionMethods.ToHashSet(collection, comparer);
 var concurrentQueue = collection.ToConcurrentQueue();
 var concurrentStack = collection.ToConcurrentStack();
 var concurrentBag = collection.ToConcurrentBag();
