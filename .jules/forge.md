@@ -35,3 +35,21 @@ net6.0           | Yes       | Legacy tests   |                     | Older test
 net8.0           | Yes       | Current stable |                     | Modern baseline
 net9.0           | Yes       | Latest stable  |                     | Requires validation
 ```
+
+## 2026-06-17 - Tedd.LinqUtils Dependency Modernization
+
+**Observation:**
+- `Tedd.LinqUtils.Tests` uses an outdated xUnit structure (`xunit` 2.4.x, `xunit.runner.visualstudio` 2.4.x), an outdated version of `Microsoft.NET.Test.Sdk` (17.1.x), and `coverlet.collector` (3.1.2) for `net6.0`.
+- `Tedd.LinqUtils.Tests` lacks tests running against `net10.0` but `Tedd.LinqUtils.Tests.csproj` has a typo `nnet8.0;net10.0`.
+- The vulnerability report shows a high-severity transitive vulnerability for `Newtonsoft.Json` 9.0.1 (via `xunit.runner.visualstudio` 2.4.3 or `Microsoft.NET.Test.Sdk` 17.1.0) under the `net6.0` target.
+- `Tedd.LinqUtils` targets `netstandard2.1;net6.0;net8.0;net9.0`. To explicitly support `net10.0`, the target framework `net10.0` was added to `Tedd.LinqUtils.csproj`.
+
+**Strategic Action:**
+- `Tedd.LinqUtils.Tests.csproj` target frameworks updated to `net6.0;net8.0;net9.0;net10.0`.
+- Update `Tedd.LinqUtils.Tests.csproj` test dependencies:
+  - `Microsoft.NET.Test.Sdk` to 17.11.1 for `net6.0` and 18.10.1 for others.
+  - `xunit` to 2.9.3 for all.
+  - `xunit.runner.visualstudio` to 2.8.2 for `net6.0` and 3.1.5 for others.
+  - `coverlet.collector` to 6.0.2 for `net6.0` and 10.1.0 for others.
+- `Tedd.LinqUtils.Benchmarks.csproj` updated `BenchmarkDotNet` to 0.14.0.
+- `Tedd.LinqUtils.csproj` added `net10.0` target framework.
