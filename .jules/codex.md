@@ -1,4 +1,6 @@
-## 2024-10-24 - LinqUtils Documentation Drift
-
-**Observation:** The README.md incorrectly documented a non-existent `Delta()` method instead of the implemented `DeltaLists()` which returns a `DeltaResult` struct instead of a tuple. Furthermore, architectural mechanisms were implicit, and methods like `CountTo` and `Action` were missing from the documentation. Typographical errors existed in the documentation snippet for `ToConcurrentBag()`.
-**Strategic Action:** Updated README.md to fix method signatures and correctly refer to `DeltaLists()`, explicitly detailed the stateless/streaming functional nature of the LINQ library, clarified that no data binding or routed events exist, and appended documentation for the missing `CountTo` and `Action` methods to restore epistemological alignment.
+## 2024-05-18 - Documentation Drift Identification
+**Observation:** README.md examples and explanations need updates according to the latest project guidelines regarding modern .NET 9.0/10.0+ API surfaces and explicit demonstration of materialization for lazy evaluation.
+**Strategic Action:** Review and update README.md to ensure compliance with documentation synchronization protocols, fully qualify method calls that collide with .NET standard extensions, and explicitly demonstrate `.ToArray()` for materialization.
+## 2026-10-17 - README Synchronization Complete
+**Observation:** README.md examples and explanations were updated according to the latest project guidelines regarding modern .NET 9.0/10.0+ API surfaces and explicit demonstration of materialization for lazy evaluation.
+**Strategic Action:** Reviewed and updated README.md to ensure compliance with documentation synchronization protocols, fully qualified method calls that collide with .NET standard extensions, and explicitly demonstrated `.ToArray()` for materialization.
