@@ -16,16 +16,20 @@ Perform an action on a collection, forwarding the collection in the chain, or co
 
 ```c#
 // ForEach and Action execute a delegate per item while streaming the collection.
-collection
+// Materialization (e.g., .ToArray()) is required to trigger execution of these lazy methods.
+var actionsResult = collection
     .ForEach(item => foobar(item))
-    .Action(item => anotherfoobar(item));
+    .Action(item => anotherfoobar(item))
+    .ToArray();
 // Would be same as
-collection
+var selectResult = collection
     .Select(item => { foobar(item); return item; })
-    .Select(item => { anotherFoobar(item); return item; });
+    .Select(item => { anotherFoobar(item); return item; })
+    .ToArray();
 
 // Count items and trigger a callback upon completion of the enumeration
-var result = collection.CountTo(count => Console.WriteLine($"Processed {count} items"));
+// Materialization is required to trigger execution.
+var result = collection.CountTo(count => Console.WriteLine($"Processed {count} items")).ToArray();
 ```
 
 ## Conditional methods
@@ -61,18 +65,19 @@ var notNulls = stringCollection.WhereIsNotNullOrWhiteSpace().ToArray();
 
 ```c#
 // Remove items in one collection from another
-var remaining = collection.Remove(new int[] { 1, 2, 3 });
-var remaining = collection.Remove(otherCollection, customComparer);
+var remaining = collection.Remove([1, 2, 3]);
+var remainingCustom = collection.Remove(otherCollection, customComparer);
 
 // Append or prepend to collection
-var appended = collection.Append(element);
-var appended = collection.Append(otherCollection);
-var prepended = collection.Prepend(otherCollection);
+// Note: Due to naming collisions with modern .NET APIs, these methods must be fully qualified.
+var appended = Tedd.LinqListManipulationMethods.Append(collection, element);
+var appendedOther = Tedd.LinqListManipulationMethods.Append(collection, otherCollection);
+var prepended = Tedd.LinqListManipulationMethods.Prepend(collection, otherCollection);
 
 // Add only items that do not already exist.
 // Note: Requires keeping full collection in memory, but will stream.
 var includesMissing = collection.AppendDistinct(otherCollection);
-var includesMissing = collection.AppendDistinct(otherCollection, comparer);
+var includesMissingCustom = collection.AppendDistinct(otherCollection, comparer);
 
 // Shuffle / randomize order of a collection
 // Note: Requires loading of full collection to memory.
@@ -91,7 +96,7 @@ var deltaWithSelector = firstCollection.DeltaLists(secondCollection, x => x.Id);
 ```c#
 // string.Join collection
 var str = collection.StringJoin(", ");
-var str = collection.StringJoin(':');
+var strChar = collection.StringJoin(':');
 ```
 
 ## Collection methods
@@ -101,9 +106,16 @@ Additions to .ToArray(), .ToList() and .ToDictionary().
 ```c#
 var queue = collection.ToQueue();
 var stack = collection.ToStack();
-var hashSet = collection.ToHashSet();
-var hashSet = collection.ToHashSet(comparer);
+// Note: Due to naming collisions with modern .NET APIs, ToHashSet must be fully qualified.
+var hashSet = Tedd.LinqToCollectionMethods.ToHashSet(collection);
+var hashSetCustom = Tedd.LinqToCollectionMethods.ToHashSet(collection, comparer);
 var concurrentQueue = collection.ToConcurrentQueue();
 var concurrentStack = collection.ToConcurrentStack();
 var concurrentBag = collection.ToConcurrentBag();
 ```
+
+## Roadmap Hypotheses
+
+The following functionalities are considered speculative enhancements and are not part of the currently implemented and established framework capabilities:
+* Seamless parallel streaming integrations beyond standard `AsParallel()` capabilities.
+* In-memory delta replication optimizations for highly volatile concurrent collections.
