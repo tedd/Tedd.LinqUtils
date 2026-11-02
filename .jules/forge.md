@@ -35,3 +35,9 @@ net6.0           | Yes       | Legacy tests   |                     | Older test
 net8.0           | Yes       | Current stable |                     | Modern baseline
 net9.0           | Yes       | Latest stable  |                     | Requires validation
 ```
+
+## 2024-11-20 - Update target frameworks and dependencies
+
+**Observation:** `Tedd.LinqUtils` lacked support for `net10.0`, dependencies in test and benchmark projects were outdated, and there was a vulnerability warning for a transitive dependency `Newtonsoft.Json`.
+
+**Strategic Action:** Added `net10.0` to target frameworks for `Tedd.LinqUtils` and `Tedd.LinqUtils.Tests`. Updated modern dependencies in `Tedd.LinqUtils.Tests` for `net8.0`, `net9.0`, and `net10.0` to latest stable versions (`Microsoft.NET.Test.Sdk` to 18.11.0, `xunit` to 2.9.3, `xunit.runner.visualstudio` to 4.0.1, `coverlet.collector` to 10.1.0). Kept `net6.0` test dependencies at older versions to maintain compatibility. Updated `BenchmarkDotNet` to latest stable version `0.15.8`. Added explicit reference to `Newtonsoft.Json 13.0.4` to fix the vulnerability in `Tedd.LinqUtils.Tests`.
